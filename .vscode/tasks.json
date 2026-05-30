@@ -49,6 +49,29 @@
                 "focus": false
             },
             "problemMatcher": []
+        },
+        {
+            "label": "View Solution (origin/solutions)",
+            "type": "shell",
+            "command": "pwsh",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy", "Bypass",
+                "-File", ".vscode/view-solution.ps1",
+                "${file}"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "WORKSPACE_FOLDER": "${workspaceFolder}"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "focus": true
+            },
+            "problemMatcher": []
         }
     ]
 }
