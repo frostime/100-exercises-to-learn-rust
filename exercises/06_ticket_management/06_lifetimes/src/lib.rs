@@ -31,7 +31,15 @@ impl TicketStore {
         self.tickets.push(ticket);
     }
 
-    pub fn iter(&self) -> std::slice::Iter<Ticket> {
+    pub fn iter(&self) -> std::slice::Iter<'_, Ticket> {
+        self.tickets.iter()
+    }
+}
+
+impl<'a> IntoIterator for &'a TicketStore {
+    type Item = &'a Ticket;
+    type IntoIter = std::slice::Iter<'a, Ticket>;
+    fn into_iter(self) -> Self::IntoIter {
         self.tickets.iter()
     }
 }
@@ -60,7 +68,9 @@ mod tests {
         store.add_ticket(ticket);
 
         let tickets: Vec<&Ticket> = store.iter().collect();
-        let tickets2: Vec<&Ticket> = (&store).into_iter().collect();
+        // 发现是否有 & 均可
+        // let tickets2: Vec<&Ticket> = (&store).into_iter().collect();
+        let tickets2: Vec<&Ticket> = (store).into_iter().collect();
         assert_eq!(tickets, tickets2);
     }
 }
