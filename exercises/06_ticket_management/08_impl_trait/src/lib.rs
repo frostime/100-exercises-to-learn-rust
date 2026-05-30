@@ -2,6 +2,8 @@
 //  `TicketStore` with status set to `Status::InProgress`.
 use ticket_fields::{TicketDescription, TicketTitle};
 
+use crate::Status::InProgress;
+
 #[derive(Clone)]
 pub struct TicketStore {
     tickets: Vec<Ticket>,
@@ -30,6 +32,12 @@ impl TicketStore {
 
     pub fn add_ticket(&mut self, ticket: Ticket) {
         self.tickets.push(ticket);
+    }
+
+    // 这里 impl Iterator<Item = &Ticket> 的意思是：
+    // 这个函数返回某个具体类型；调用者只知道它实现了 Iterator<Item = &Ticket>，不知道它的完整类型名。
+    pub fn in_progress(&self) -> impl Iterator<Item = &Ticket> {
+        self.tickets.iter().filter(|&ticket| ticket.status == Status::InProgress)
     }
 }
 

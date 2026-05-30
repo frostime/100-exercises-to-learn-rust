@@ -4,6 +4,7 @@
 //  Implement additional traits on `TicketId` if needed.
 
 use std::collections::BTreeMap;
+use std::collections::btree_map::{IntoIter, Values};
 use std::ops::{Index, IndexMut};
 use ticket_fields::{TicketDescription, TicketTitle};
 
@@ -13,7 +14,7 @@ pub struct TicketStore {
     counter: u64,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Eq, Ord)]
 pub struct TicketId(u64);
 
 #[derive(Clone, Debug, PartialEq)]
@@ -40,7 +41,7 @@ pub enum Status {
 impl TicketStore {
     pub fn new() -> Self {
         Self {
-            tickets: todo!(),
+            tickets: BTreeMap::new(),
             counter: 0,
         }
     }
@@ -54,16 +55,21 @@ impl TicketStore {
             description: ticket.description,
             status: Status::ToDo,
         };
-        todo!();
+        // todo!();
+
+        self.tickets.insert(id, ticket);
+
         id
     }
 
     pub fn get(&self, id: TicketId) -> Option<&Ticket> {
-        todo!()
+        // todo!()
+        self.tickets.get(&id)
     }
 
     pub fn get_mut(&mut self, id: TicketId) -> Option<&mut Ticket> {
-        todo!()
+        // todo!()
+        self.tickets.get_mut(&id)
     }
 }
 
@@ -92,6 +98,15 @@ impl IndexMut<TicketId> for TicketStore {
 impl IndexMut<&TicketId> for TicketStore {
     fn index_mut(&mut self, index: &TicketId) -> &mut Self::Output {
         &mut self[*index]
+    }
+}
+
+// 个人并不是很能理解为什么要这么写
+impl<'a> IntoIterator for &'a TicketStore {
+    type Item = &'a Ticket;
+    type IntoIter = Values<'a, TicketId, Ticket>;
+    fn into_iter(self) -> Self::IntoIter {
+        self.tickets.values()
     }
 }
 
